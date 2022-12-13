@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Galo Bilionário",
+    "description": "NFTs do Galo",
+    "image_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/00.png",
+    "metadata_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/00.json",
+    "edition": 1,
+    "date": 1667851320022,
+    "attributes": [
+      {
+        "trait_type": "Poder",
+        "value": "78"
+      },
+      {
+        "trait_type": "Categoria",
+        "value": "Único"
+      }
+    ]
+  },
+  {
+    "name": "Galo Caçador",
+    "description": "NFTs do Galo",
+    "image_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/01.png",
+    "metadata_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/01.json",
+    "edition": 2,
+    "date": 1667851320022,
+    "attributes": [
+      {
+        "trait_type": "Poder",
+        "value": "55"
+      },
+      {
+        "trait_type": "Categoria",
+        "value": "Normal"
+      }
+    ]
+  },{
+    "name": "Galo Exterminador",
+    "description": "NFTs do Galo",
+    "image_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/02.png",
+    "metadata_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/02.json",
+    "edition": 3,
+    "date": 1667851320022,
+    "attributes": [
+      {
+        "trait_type": "Poder",
+        "value": "96"
+      },
+      {
+        "trait_type": "Categoria",
+        "value": "Raro"
+      }
+    ]
+  },{
+    "name": "Galo Fashion",
+    "description": "NFTs do Galo",
+    "image_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/03.png",
+    "metadata_link": "https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/03.json",
+    "edition": 4,
+    "date": 1667851320022,
+    "attributes": [
+      {
+        "trait_type": "Poder",
+        "value": "42"
+      },
+      {
+        "trait_type": "Categoria",
+        "value": "Normal"
+      }
+    ]
+  }
+]
