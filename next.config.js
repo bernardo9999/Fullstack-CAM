@@ -10,7 +10,8 @@ const nextConfig = {
       "cdn-statics.pmo.sc.gov.br",
       "nftstorage.link",
       "bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link",
-      "*.ipfs.nftstorage.link"
+      "*.ipfs.nftstorage.link",
+      "bafybeiavy5i4ghnxqjz5z3clviqpbi76kkbf3zkodnwq73yuigoqkdh6vi.ipfs.nftstorage.link",
     ],
   },
 
