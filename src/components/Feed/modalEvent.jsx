@@ -1,7 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import styled from "@emotion/styled";
-
+import { Button } from "@mui/material";
+import { ref, remove } from "firebase/database";
+import { db } from "../../../firebase";
+import { UserContext } from "../../../context/UserContext";
+import { useContext } from "react";
 export function ModalEvent({ show, setShow, event }) {
+  const { userData } = useContext(UserContext);
+  const handleDeleteEvent = async () => {
+    await remove(ref(db, "events/" + event?.id))
+    handleClose();
+  };
   const handleClose = () => setShow(false);
 
   const handleClickOutside = (e) => {
@@ -58,6 +67,19 @@ export function ModalEvent({ show, setShow, event }) {
             border: "1px solid #a6a6a6",
           }}
         />
+        {userData?.isAdmin &&
+          <Button
+            variant="contained"
+            color="error"
+            style={{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+              width: "100%",
+
+            }}
+            onClick={handleDeleteEvent}
+          >Remover Evento</Button>
+        }
       </ModalBody>
     </Modal>
   );
