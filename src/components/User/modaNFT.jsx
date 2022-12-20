@@ -1,13 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import styled from "@emotion/styled";
-import { CircularProgress } from "@mui/material";
-import Image from "next/image";
+import { ref, update } from "firebase/database";
 import { useEffect, useState } from "react";
+import { auth, db } from "../../../firebase";
 
 export function ModalNFT({ show, setShow, ticket }) {
   const handleClose = () => setShow(false);
-  const [loadingImage, setLoadingImage] = useState(true);
+  const [atributes, setAttributes] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setLoading(true);
+    const getAtributes = async () => {
+      if (ticket?.link) {
+        await fetch(ticket?.link)
+          .then((res) => res.json())
+          .then((data) => {
+            setAttributes(data.attributes);
+          });
+      }
+    };
+    getAtributes();
+    setLoading(false);
+  }, [ticket]);
 
 
   const handleClickOutside = (e) => {
@@ -18,6 +33,13 @@ export function ModalNFT({ show, setShow, ticket }) {
   if (show) {
     document.addEventListener("mousedown", handleClickOutside);
   }
+
+  const changeProfileAvatar = async (e) => {
+    e.preventDefault();
+    await update(ref(db, "users/" + auth?.currentUser?.uid), {
+      photoURL: ticket?.image,
+    });
+  };
 
   return (
     <>
@@ -39,63 +61,63 @@ export function ModalNFT({ show, setShow, ticket }) {
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <h1 style={{ textAlign: "center" }}>{ticket?.name}</h1>
-          <div style={{ position: "relative" }}>
-            <Image
-              src={ticket?.image}
-              alt={ticket?.name}
-              width={300}
-              height={300}
-              quality={100}
-              objectFit="contain"
-              objectPosition="center"
-              style={{
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                window.open(ticket?.hash, "_blank");
-              }}
-              onLoad={() => setLoadingImage(false)}
-            />
-            {loadingImage && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0",
-                  bottom: "0",
-                  left: "0",
-                  right: "0",
-                  margin: "auto",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CircularProgress color="success" />
-              </div>
-            )}
-          </div>
 
-          {ticket?.attributes?.map((atribute) => {
-            return (
-              <span
-                key={atribute.trait_type}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  margin: "0.5rem",
-                  fontWeight: "bold",
-                  fontSize: "1.2rem",
-                }}
-              >
-                {atribute.trait_type}: {atribute.value}
-              </span>
-            );
-          })}
+          <h1 style={{ textAlign: "center" }}>{ticket?.name}</h1>
+          <span style={{ textAlign: "center", paddingBottom: "1rem" }}>
+            {ticket?.description}
+          </span>
+          <img
+            src={ticket?.image}
+            alt={ticket?.name}
+            width={300}
+            height={300}
+            style={{
+              borderRadius: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              window.open(ticket?.hash, "_blank");
+            }}
+          />
+          {loading ? (
+            <span
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "0.5rem",
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+              }}
+            >
+              Carregando...
+            </span>
+          ) : (
+            atributes?.map((atribute) => {
+              return (
+                <span
+                  key={atribute.trait_type}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    margin: "0.5rem",
+                    fontWeight: "bold",
+                    fontSize: "1.2rem",
+                  }}
+                >
+                  {atribute.trait_type === "Power"
+                    ? "Poder"
+                    : atribute.trait_type}
+                  : {atribute.value}
+                </span>
+              );
+            })
+          )}
 
           {ticket?.hash && (
             <Button
@@ -106,6 +128,9 @@ export function ModalNFT({ show, setShow, ticket }) {
               Comprovante
             </Button>
           )}
+          <ButtonSecondary type="button" onClick={changeProfileAvatar}>
+            Usar como avatar
+          </ButtonSecondary>
         </ModalBody>
       </Modal>
     </>
@@ -170,5 +195,22 @@ const Button = styled.button`
   transition: background-color 0.2s;
   &:hover {
     background-color: var(--rosaEscuro);
+  }
+`;
+
+const ButtonSecondary = styled.button`
+  background-color: var(--azul);
+  color: black !important;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 8px;
+  width: 100%;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: var(--rosaEscuro);
+    color: white !important;
   }
 `;

@@ -6,17 +6,17 @@ import { auth, db } from "../../../firebase";
 import { UserContext } from "../../../context/UserContext";
 import { handleRedeem } from "../../../hooks/cryptum";
 
+
 export default function MintNFT() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [hash, setHash] = useState("");
   const [erro, setError] = useState("");
-  const randomNft = Math.floor(Math.random() * 4);
-  const nft = `https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/0${randomNft}.json`;
   const { userData } = useContext(UserContext);
   const tokensNumber = userData?.mintTickets;
   const mintText = tokensNumber === 0 ? "Você não possui Tickets para Mintar" : `Mint (${tokensNumber}x Tickets)`;
-
+  const randomNft = Math.floor(Math.random() * 4);
+  const nft = `https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/0${randomNft}.json`;
 
 
 

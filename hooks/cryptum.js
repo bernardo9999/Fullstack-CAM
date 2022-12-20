@@ -6,7 +6,7 @@ export const handleRedeem = async ({ uri, mintTickets, setFunction }) => {
   const protocol = "POLYGON";
 
   await axios
-    .post("https://stripe-payment-createpi.herokuapp.com/mintNFT", {
+    .post("https://api-services.herokuapp.com/mintNFT", {
       token,
       destination,
       uri,

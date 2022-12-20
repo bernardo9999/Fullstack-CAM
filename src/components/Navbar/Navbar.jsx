@@ -12,7 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { UserContext } from "../../../context/UserContext";
 import { useContext, useState } from "react";
 import Cookies from "js-cookie";
@@ -22,44 +22,27 @@ const font = "Montserrat, sans-serif";
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const router = useRouter();
 
   const { userData: data, setUser, setIsLogged } = useContext(UserContext);
   const pages = [
     {
       name: "Jogos",
-      link: () => {
-        Router.push("/jogos");
-        setAnchorElNav(null);
-        setAnchorElUser(null);
-      },
+      link: "/jogos",
     },
   ];
 
   const settings = [
     {
       name: "Perfil",
-      link: () => Router.push("/perfil"),
+      link: "/perfil",
     },
     {
       name: "Editar Perfil",
-      link: () => Router.push("/editarPerfil"),
+      link: "/editarPerfil",
     },
-    {
-      name: "Sair",
-      link: () => {
-        signOut(auth)
-          .then(() => {
-            localStorage.removeItem("user");
-            Cookies.remove("user");
-            setUser({});
-            setIsLogged(false);
-            Router.push("/login");
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      },
-    },
+
+
   ];
 
   const handleOpenNavMenu = (event) => {
@@ -69,12 +52,28 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (link) => {
+    router.push(link);
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (link) => {
+    router.push(link);
     setAnchorElUser(null);
+
+  };
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      localStorage.removeItem("user");
+      Cookies.remove("user");
+      setUser({});
+      setIsLogged(false);
+      Router.push("/login");
+    })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -103,7 +102,7 @@ const ResponsiveAppBar = () => {
               cursor: "pointer",
             }}
           >
-           GALO WALLET
+            GALO WALLET
           </Typography>
 
           <Box
@@ -155,11 +154,10 @@ const ResponsiveAppBar = () => {
                 </MenuItem>
               )}
 
-              {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+              {pages?.map((page) => (
+                <MenuItem key={page.name} onClick={() => handleCloseNavMenu(page.link)}>
                   <Typography
                     textAlign="center"
-                    onClick={page.link}
                     sx={{ fontFamily: font }}
                   >
                     {page.name}
@@ -197,10 +195,10 @@ const ResponsiveAppBar = () => {
               fontFamily: font,
             }}
           >
-            {pages.map((page) => (
+            {pages?.map((page) => (
               <Button
                 key={page.name}
-                onClick={page.link}
+                onClick={() => { handleCloseNavMenu(page.link) }}
                 sx={{
                   my: 2,
                   color: "white",
@@ -269,16 +267,24 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting?.name} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting?.name} onClick={() => handleCloseUserMenu(setting.link)}>
                   <Typography
                     textAlign="center"
-                    onClick={setting?.link}
+
                     sx={{ fontFamily: font }}
                   >
                     {setting?.name}
                   </Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={handleLogout}>
+                <Typography
+                  textAlign="center" sx={{ fontFamily: font }}
+                >
+                  Sair
+                </Typography>
+              </MenuItem>
+
             </Menu>
           </Box>
         </Toolbar>

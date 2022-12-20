@@ -100,7 +100,7 @@ const CheckoutForm = ({ price, name, setIsBuying, photo, data, id }) => {
       };
       setProcessingTo(true);
       const { data: clientSecret } = await axios.post(
-        "https://stripe-payment-createpi.herokuapp.com/",
+        "https://api-services.herokuapp.com/",
         {
           amount: price * 100,
           currency: "brl",
@@ -219,7 +219,7 @@ const CheckoutForm = ({ price, name, setIsBuying, photo, data, id }) => {
             <span
               style={{
                 color: "black",
-               
+
               }}
             >
               Pagar R${price} para entrada
