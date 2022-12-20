@@ -10,7 +10,6 @@ import { handleRedeem } from "../../../hooks/cryptum";
 export default function MintNFT() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-  const [hash, setHash] = useState("");
   const [erro, setError] = useState("");
   const { userData } = useContext(UserContext);
   const tokensNumber = userData?.mintTickets;
@@ -18,11 +17,8 @@ export default function MintNFT() {
   const randomNft = Math.floor(Math.random() * 4);
   const nft = `https://bafybeiglfhh726npy5hoyc6czzlwdgnsuljdie5lh7acqp2o7luwdaqz5u.ipfs.nftstorage.link/0${randomNft}.json`;
 
-
-
   const removeTickets = async () => {
     try {
-
       let tickets = tokensNumber - 1;
       await update(ref(db, "users/" + auth?.currentUser?.uid), {
         mintTickets: tickets,
@@ -32,46 +28,50 @@ export default function MintNFT() {
         setDone(true);
       }
     } catch (err) {
-      setError("Você não possui Tickets para Mintar")
+      setError("Você não possui Tickets para Mint")
     }
   };
 
-  useEffect(() => {
-    const addNft = async (hash) => {
-      try {
-        const randomId = Math.floor(Math.random() * 1000000);
-        const power = await axios(nft).then(
-          (res) => res?.data?.attributes[0].value
-        );
-        const name = await axios(nft).then((res) => res?.data?.name);
-        const description = await axios(nft).then((res) => res?.data?.description);
-        const image = await axios(nft).then((res) => res?.data?.image_link);
-        await update(ref(db, "users/" + auth?.currentUser?.uid + "/nfts/" + randomId), {
-          name,
-          description,
-          image,
-          id: randomId,
-          link: nft,
-          power,
-          hash: `https://mumbai.polygonscan.com/tx/${hash}`,
-        });
-      } catch (err) {
-        console.log(err)
-      }
 
-    };
-    if (hash) {
-      addNft(hash);
+  const addNft = async (hash) => {
+    try {
+      const randomId = Math.floor(Math.random() * 1000000);
+      const power = await axios(nft).then(
+        (res) => res?.data?.attributes[0].value
+      );
+      const name = await axios(nft).then((res) => res?.data?.name);
+      const description = await axios(nft).then((res) => res?.data?.description);
+      const image = await axios(nft).then((res) => res?.data?.image_link);
+      await update(ref(db, "users/" + auth?.currentUser?.uid + "/nfts/" + randomId), {
+        name,
+        description,
+        image,
+        id: randomId,
+        link: nft,
+        power,
+        hash: `https://mumbai.polygonscan.com/tx/${hash}`,
+      });
+    } catch (err) {
+      console.log(err)
     }
-  }, [hash]);
+
+  };
+
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       setLoading(true);
-      await handleRedeem({ uri: nft, mintTickets: tokensNumber, setFunction: setHash });
-      await removeTickets();
-      setDone(true);
+      let tickets = tokensNumber - 1;
+      if (tickets > -1) {
+        await handleRedeem({ uri: nft, mintTickets: tokensNumber }).then(
+          (res) => {
+            addNft(res?.hash);
+            setDone(true);
+            removeTickets();
+          }
+        )
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -101,7 +101,7 @@ export default function MintNFT() {
       </div>
       <br />
 
-      <Button onClick={(e) => handleSubmit(e)} disabled={loading}>
+      <Button onClick={(e) => handleSubmit(e)} disabled={loading || done}>
         {loading ? "Mintando seu NFT, Aguarde..." : mintText}
       </Button>
       {done &&
